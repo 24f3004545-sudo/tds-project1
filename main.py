@@ -60,15 +60,16 @@ def generate_app_code(brief: str, attachments: Optional[List[Attachment]]) -> di
     attachment_content = ""
     if attachments:
         for att in attachments:
-            # ENHANCED LOGGING
             print(f"   Decoding attachment: {att.name}")
             try:
-                header, encoded = att.url.split(",", 1)
-                decoded_data = base64.b64decode(encoded).decode('utf-8')
-                attachment_content += f"\n\n--- Attachment: {att.name} ---\n{decoded_data}\n--- End Attachment ---"
+                # header remains, but we want the entire URI for the prompt
+                # The LLM knows how to embed the Base64 URI directly into the HTML <img> tag
+                
+                attachment_content += f"\n\n--- Attachment: {att.name} ---\nData URI: {att.url}\n--- End Attachment ---"
             except Exception as e:
-                print(f"   🚨 Could not decode attachment {att.name}: {e}")
-                attachment_content += f"\n\n--- Attachment: {att.name} (could not be decoded) ---"
+                # Keep original error logging for integrity checks
+                print(f"   🚨 Could not process attachment {att.name} URI: {e}")
+                attachment_content += f"\n\n--- Attachment: {att.name} (URI failed to process) ---"
 
     prompt = f"""
     You are an expert web developer. Your task is to generate the complete code for a single-page web application based on a user's brief.
