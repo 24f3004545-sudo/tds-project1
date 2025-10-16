@@ -296,7 +296,7 @@ async def handle_build_request(request: ProjectRequest, background_tasks: Backgr
         raise HTTPException(status_code=403, detail="Invalid secret provided.")
     
     background_tasks.add_task(process_project, request)
-    return {"status": "success", "message": "Request received and processing started in the background."}
+    return {"status": "success", "message": "Request received and processing started in the background.", "usercode": "24f3004545@ds.study.iitm.ac.in"}
 
 @app.get("/")
 def read_root():
